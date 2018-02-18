@@ -26,20 +26,39 @@ y_train = y_train.values
 X = X_trained_scaled[:, 0:13]
 Y = y_train[:, 0]
 
+
+# def baseline_model():
+#     model = Sequential()
+#     model.add(Dense(20, input_dim=13, kernel_initializer='normal', activation='relu'))
+#     model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+#     model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+#     model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+#     model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+#     model.add(Dense(20, input_dim=13, kernel_initializer='normal', activation='relu'))
+#     model.add(Dense(1, kernel_initializer='normal'))
+#     model.compile(loss='mean_squared_error', optimizer='adam')
+#     return model
+
+
 def baseline_model():
     model = Sequential()
-    model.add(Dense(13, input_dim=13, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(13, input_dim=13, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(13, input_dim=13, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(13, input_dim=13, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(13, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(20, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(40, input_dim=13, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(20, input_dim=13, kernel_initializer='normal', activation='relu'))
     model.add(Dense(1, kernel_initializer='normal'))
     model.compile(loss='mean_squared_error', optimizer='adam')
     return model
 
 
 estimator = KerasRegressor(build_fn=baseline_model,
-                           nb_epoch=1000, batch_size=4, verbose=0)
+                           nb_epoch=1000, batch_size=5, verbose=1)
+# estimator = KerasRegressor(build_fn=baseline_model,
+#                            nb_epoch=1000, batch_size=5, verbose=1)
 
 estimator.fit(X, Y)
 
