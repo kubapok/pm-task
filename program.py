@@ -4,6 +4,8 @@ import matplotlib.patches as mpatches
 import datetime
 import seaborn as sns
 import copy
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 
 def get_report(report_name='PRSA_data_2010.1.1-2014.12.31.csv'):
@@ -53,39 +55,63 @@ def plot_months(report,):
     plt.show()
 
 
+def plot_normalized(report, start_date, end_date):
+    r2 = copy.deepcopy(report)
+    r2 = r2[(r2.datetime > start_date) &
+            (r2.datetime < end_date)]
+    del r2['No'], r2['year'], r2['month'], r2['day'], r2['hour'], r2['cbwd'], r2['Ir']
+    del r2['datetime']
+
+    r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
+    scaler = MinMaxScaler()
+    r2_scaled = pd.DataFrame(scaler.fit_transform(r2), columns=r2.columns)
+    r2_scaled.plot()
+    plt.show()
+
+
+def plot_lms(report):
+    r2 = copy.deepcopy(report)
+    r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
+    print(np.corrcoef(report['pm2.5'], report['TEMP']))
+    print(np.corrcoef(report['pm2.5'], report['DEWP']))
+
+    for col in ("DEWP", "TEMP", "PRES", "Iws", "Is", "Ir"):
+        sns.lmplot(x=col, y="pm2.5", data=report)
+        plt.show()
+
+
+def plot_lms2(report):
+    r2 = copy.deepcopy(report)
+    r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
+    print(np.corrcoef(report['pm2.5'], report['TEMP']))
+    print(np.corrcoef(report['pm2.5'], report['DEWP']))
+
+    sns.lmplot(x="Iws", y="pm2.5", data=report, col="cbwd")
+    plt.show()
+
+
 if __name__ == "__main__":
     sns.set(color_codes=True)
     report = get_report()
     report.isnull().sum()
     report.describe()
 
+    # sns.violinplot(x=report["pm2.5"])
+    # plt.show()
     # plot_days(report, datetime.datetime(2012, 1, 1),
-              # datetime.datetime(2012, 1, 8))
+    #           datetime.datetime(2012, 1, 8))
     # plot_months(report)
+    # plot_normalized(report, datetime.datetime(2012, 1, 1),
+    #                 datetime.datetime(2012, 1, 8))
+    # plot_lms(report)
+    # plot_lms2(report)
+    # sns.boxplot(x="cbwd", y="pm2.5", data=report)
+    # plt.show()
 
-    r2 = copy.deepcopy(report)
-    del r2['No']
-    del r2['year']
-    del r2['month']
-    del r2['day']
-    del r2['hour']
-    del r2['cbwd']
-    del r2['Ir']
-    r2 = r2[(r2.datetime > datetime.datetime(2014, 11, 1)) &(r2.datetime < datetime.datetime(2014, 11, 15)) ]
-    del r2['datetime']
-    # del r2['pm2.5']
-    r2.plot()
-    plt.show()
-    # widać związek z temperaturą
-
-    r2['pm2.5'] = r2['pm2.5'].fillna(50)
-    df = r2
-    from sklearn.preprocessing import  MinMaxScaler
-    scaler = MinMaxScaler()
-    df_scaled = pd.DataFrame(scaler.fit_transform(r2), columns=r2.columns)
-    df_scaled.plot()
-    import numpy as np
-    np.corrcoef(r2['pm2.5'], r2['TEMP'])
-    np.corrcoef(r2['pm2.5'], r2['DEWP'])
+    sns.boxplot(x="month", y="pm2.5", data=report)
     plt.show()
 
+    sns.boxplot(x="year", y="pm2.5", data = report, hue = "month")
+    plt.show()
+
+    # del r2['No'], r2['year'], r2['month'], r2['day'], r2['hour'], r2['cbwd'], r2['Ir']
