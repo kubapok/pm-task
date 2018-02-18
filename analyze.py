@@ -1,6 +1,5 @@
 import datetime
 import copy
-
 import pandas as pd
 import seaborn as sns
 import numpy as np
@@ -55,6 +54,9 @@ def get_means_in_months(report, year):
                              for x in range(1, 13)])
     return month_means
 
+def plot_years(report,):
+    sns.boxplot(x="year", y="pm2.5", data=report)
+    plt.show()
 
 def plot_months(report,):
     pal = sns.color_palette()[:5]
@@ -79,10 +81,10 @@ def plot_months(report,):
 
 
 def plot_normalized(report, start_date, end_date):
-    r2 = copy.deepcopy(report)
+    r2 = pd.DataFrame(
+        report, columns=['pm2.5', 'DEWP', 'TEMP', 'PRES', 'Iws', 'Is', 'datetime'])
     r2 = r2[(r2.datetime > start_date) &
             (r2.datetime < end_date)]
-    del r2['No'], r2['year'], r2['month'], r2['day'], r2['hour'], r2['cbwd'], r2['Ir']
     del r2['datetime']
 
     r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
@@ -98,7 +100,6 @@ def plot_lms(report):
 
     for col in ("DEWP", "TEMP", "PRES", "Iws", "Is", "Ir"):
         sns.jointplot(x=col, y="pm2.5", data=report, kind="reg")
-        #sns.lmplot(x=col, y="pm2.5", data=report)#, scatter = True)
         plt.show()
 
 
@@ -110,26 +111,31 @@ def plot_wind_impact(report):
 if __name__ == "__main__":
     sns.set(color_codes=True)
     report = get_report()
-    report.isnull().sum()
-    report.info()
-    report.describe()
-    print(np.corrcoef(report['pm2.5'], report['TEMP']))
-    print(np.corrcoef(report['pm2.5'], report['DEWP']))
 
-    # plot_days(report, datetime.datetime(2010, 3, 1),
-    #           datetime.datetime(2010, 3, 10))
-    # plot_days(report, datetime.datetime(2012, 1, 1),
-    #           datetime.datetime(2012, 1, 8))
-    # plot_days(report, datetime.datetime(2014, 4, 20),
-    #           datetime.datetime(2014, 5, 8))
-    # plot_normalized(report, datetime.datetime(2012, 1, 1),
-    #                 datetime.datetime(2012, 1, 8))
-    # plot_normalized(report, datetime.datetime(2011, 8, 1),
-    #                 datetime.datetime(2011, 8, 4))
+    input('nan values (type enter to continue)')
+    print(report.isnull().sum())
+    input('report info (type enter to continue)')
+    print(report.info())
+    input('describe (type enter to continue)')
+    print(report.describe())
+    input('correlation (type enter to continue)')
+    print(report.corr())
+    input('correlation for pm2.5 (type enter to continue)')
+    print(report.corr()['pm2.5'])
 
-    # plot_months(report)
+    plot_days(report, datetime.datetime(2010, 3, 1),
+              datetime.datetime(2010, 3, 10))
+    plot_days(report, datetime.datetime(2012, 1, 1),
+              datetime.datetime(2012, 1, 8))
+    plot_days(report, datetime.datetime(2014, 4, 20),
+              datetime.datetime(2014, 5, 8))
+    plot_normalized(report, datetime.datetime(2012, 1, 1),
+                    datetime.datetime(2012, 1, 8))
+    plot_normalized(report, datetime.datetime(2011, 8, 1),
+                    datetime.datetime(2011, 8, 4))
 
-    # sns.jointplot(x="TEMP", y="pm2.5", data=report, kind="reg");
-    # plt.show()
+    plot_years(report)
+    plot_months(report)
+
     plot_lms(report)
-    # plot_wind_impact(report)
+    plot_wind_impact(report)
