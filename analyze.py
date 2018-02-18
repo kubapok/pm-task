@@ -85,7 +85,8 @@ def plot_lms(report):
     r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
 
     for col in ("DEWP", "TEMP", "PRES", "Iws", "Is", "Ir"):
-        sns.lmplot(x=col, y="pm2.5", data=report)
+        sns.jointplot(x=col, y="pm2.5", data=report, kind="reg")
+        #sns.lmplot(x=col, y="pm2.5", data=report)#, scatter = True)
         plt.show()
 
 
@@ -103,17 +104,20 @@ if __name__ == "__main__":
     print(np.corrcoef(report['pm2.5'], report['TEMP']))
     print(np.corrcoef(report['pm2.5'], report['DEWP']))
 
-    plot_days(report, datetime.datetime(2010, 3, 1),
-              datetime.datetime(2010, 3, 10))
-    plot_days(report, datetime.datetime(2012, 1, 1),
-              datetime.datetime(2012, 1, 8))
-    plot_days(report, datetime.datetime(2014, 4, 20),
-              datetime.datetime(2014, 5, 8))
-    plot_normalized(report, datetime.datetime(2012, 1, 1),
-                    datetime.datetime(2012, 1, 8))
-    plot_normalized(report, datetime.datetime(2011, 8, 1),
-                    datetime.datetime(2011, 8, 4))
+    # plot_days(report, datetime.datetime(2010, 3, 1),
+    #           datetime.datetime(2010, 3, 10))
+    # plot_days(report, datetime.datetime(2012, 1, 1),
+    #           datetime.datetime(2012, 1, 8))
+    # plot_days(report, datetime.datetime(2014, 4, 20),
+    #           datetime.datetime(2014, 5, 8))
+    # plot_normalized(report, datetime.datetime(2012, 1, 1),
+    #                 datetime.datetime(2012, 1, 8))
+    # plot_normalized(report, datetime.datetime(2011, 8, 1),
+    #                 datetime.datetime(2011, 8, 4))
 
-    plot_months(report)
+    # plot_months(report)
+
+    # sns.jointplot(x="TEMP", y="pm2.5", data=report, kind="reg");
+    # plt.show()
     plot_lms(report)
-    plot_wind_impact(report)
+    # plot_wind_impact(report)
