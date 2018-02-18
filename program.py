@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import datetime
 import seaborn as sns
+import copy
 
 
 def get_report(report_name='PRSA_data_2010.1.1-2014.12.31.csv'):
@@ -58,6 +59,33 @@ if __name__ == "__main__":
     report.isnull().sum()
     report.describe()
 
-    plot_days(report, datetime.datetime(2012, 1, 1),
-              datetime.datetime(2012, 1, 8))
-    plot_months(report)
+    # plot_days(report, datetime.datetime(2012, 1, 1),
+              # datetime.datetime(2012, 1, 8))
+    # plot_months(report)
+
+    r2 = copy.deepcopy(report)
+    del r2['No']
+    del r2['year']
+    del r2['month']
+    del r2['day']
+    del r2['hour']
+    del r2['cbwd']
+    del r2['Ir']
+    r2 = r2[(r2.datetime > datetime.datetime(2014, 11, 1)) &(r2.datetime < datetime.datetime(2014, 11, 15)) ]
+    del r2['datetime']
+    # del r2['pm2.5']
+    r2.plot()
+    plt.show()
+    # widać związek z temperaturą
+
+    r2['pm2.5'] = r2['pm2.5'].fillna(50)
+    df = r2
+    from sklearn.preprocessing import  MinMaxScaler
+    scaler = MinMaxScaler()
+    df_scaled = pd.DataFrame(scaler.fit_transform(r2), columns=r2.columns)
+    df_scaled.plot()
+    import numpy as np
+    np.corrcoef(r2['pm2.5'], r2['TEMP'])
+    np.corrcoef(r2['pm2.5'], r2['DEWP'])
+    plt.show()
+
