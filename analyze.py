@@ -98,6 +98,7 @@ if __name__ == "__main__":
     sns.set(color_codes=True)
     report = get_report()
     report.isnull().sum()
+    report.info()
     report.describe()
     print(np.corrcoef(report['pm2.5'], report['TEMP']))
     print(np.corrcoef(report['pm2.5'], report['DEWP']))
