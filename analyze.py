@@ -1,11 +1,12 @@
+import datetime
+import copy
+
 import pandas as pd
+import seaborn as sns
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-import datetime
-import seaborn as sns
-import copy
-from sklearn.preprocessing import MinMaxScaler
-import numpy as np
+import sklearn.preprocessing
 
 
 def get_report(report_name='PRSA_data_2010.1.1-2014.12.31.csv'):
@@ -13,6 +14,11 @@ def get_report(report_name='PRSA_data_2010.1.1-2014.12.31.csv'):
     report['datetime'] = pd.Series([datetime.datetime(y, m, d, h)
                                     for y, m, d, h in zip(report.year, report.month, report.day, report.hour)])
     return report
+
+
+def plot_pm(report):
+    sns.violinplot(x=report["pm2.5"])
+    plt.show()
 
 
 def plot_days(report, start_date, end_date):
@@ -53,6 +59,11 @@ def plot_months(report,):
                         for i in range(1, 13)], rotation=45, fontsize=8)
     ax.set_ylabel('PM2.5 concentration (ug/m^3) ')
     plt.show()
+    sns.boxplot(x="month", y="pm2.5", data=report)
+    plt.show()
+
+    sns.boxplot(x="year", y="pm2.5", data=report, hue="month")
+    plt.show()
 
 
 def plot_normalized(report, start_date, end_date):
@@ -63,7 +74,7 @@ def plot_normalized(report, start_date, end_date):
     del r2['datetime']
 
     r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
-    scaler = MinMaxScaler()
+    scaler = sklearn.preprocessing.MinMaxScaler()
     r2_scaled = pd.DataFrame(scaler.fit_transform(r2), columns=r2.columns)
     r2_scaled.plot()
     plt.show()
@@ -72,21 +83,14 @@ def plot_normalized(report, start_date, end_date):
 def plot_lms(report):
     r2 = copy.deepcopy(report)
     r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
-    print(np.corrcoef(report['pm2.5'], report['TEMP']))
-    print(np.corrcoef(report['pm2.5'], report['DEWP']))
 
     for col in ("DEWP", "TEMP", "PRES", "Iws", "Is", "Ir"):
         sns.lmplot(x=col, y="pm2.5", data=report)
         plt.show()
 
 
-def plot_lms2(report):
-    r2 = copy.deepcopy(report)
-    r2['pm2.5'] = r2['pm2.5'].fillna(r2['pm2.5'].mean())
-    print(np.corrcoef(report['pm2.5'], report['TEMP']))
-    print(np.corrcoef(report['pm2.5'], report['DEWP']))
-
-    sns.lmplot(x="Iws", y="pm2.5", data=report, col="cbwd")
+def plot_wind_impact(report):
+    sns.boxplot(x="cbwd", y="pm2.5", data=report)
     plt.show()
 
 
@@ -95,23 +99,20 @@ if __name__ == "__main__":
     report = get_report()
     report.isnull().sum()
     report.describe()
+    print(np.corrcoef(report['pm2.5'], report['TEMP']))
+    print(np.corrcoef(report['pm2.5'], report['DEWP']))
 
-    # sns.violinplot(x=report["pm2.5"])
-    # plt.show()
-    # plot_days(report, datetime.datetime(2012, 1, 1),
-    #           datetime.datetime(2012, 1, 8))
-    # plot_months(report)
-    # plot_normalized(report, datetime.datetime(2012, 1, 1),
-    #                 datetime.datetime(2012, 1, 8))
-    # plot_lms(report)
-    # plot_lms2(report)
-    # sns.boxplot(x="cbwd", y="pm2.5", data=report)
-    # plt.show()
+    plot_days(report, datetime.datetime(2010, 3, 1),
+              datetime.datetime(2010, 3, 10))
+    plot_days(report, datetime.datetime(2012, 1, 1),
+              datetime.datetime(2012, 1, 8))
+    plot_days(report, datetime.datetime(2014, 4, 20),
+              datetime.datetime(2014, 5, 8))
+    plot_normalized(report, datetime.datetime(2012, 1, 1),
+                    datetime.datetime(2012, 1, 8))
+    plot_normalized(report, datetime.datetime(2011, 8, 1),
+                    datetime.datetime(2011, 8, 4))
 
-    sns.boxplot(x="month", y="pm2.5", data=report)
-    plt.show()
-
-    sns.boxplot(x="year", y="pm2.5", data = report, hue = "month")
-    plt.show()
-
-    # del r2['No'], r2['year'], r2['month'], r2['day'], r2['hour'], r2['cbwd'], r2['Ir']
+    plot_months(report)
+    plot_lms(report)
+    plot_wind_impact(report)
