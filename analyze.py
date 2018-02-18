@@ -16,6 +16,18 @@ def get_report(report_name='PRSA_data_2010.1.1-2014.12.31.csv'):
     return report
 
 
+def get_report_cbwd_encoded(report_name='PRSA_data_2010.1.1-2014.12.31.csv'):
+    report = pd.read_csv(report_name, sep=',')
+    report['datetime'] = pd.Series([datetime.datetime(y, m, d, h)
+                                    for y, m, d, h in zip(report.year, report.month, report.day, report.hour)])
+
+    report["is_cbwd_NW"] = report['cbwd'].map(lambda x: 1 if x == 'NW' else 0)
+    report["is_cbwd_cv"] = report['cbwd'].map(lambda x: 1 if x == 'cv' else 0)
+    report["is_cbwd_SE"] = report['cbwd'].map(lambda x: 1 if x == 'SE' else 0)
+    report["is_cbwd_NE"] = report['cbwd'].map(lambda x: 1 if x == 'NE' else 0)
+    return report
+
+
 def plot_pm(report):
     sns.violinplot(x=report["pm2.5"])
     plt.show()
