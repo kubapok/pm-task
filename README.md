@@ -22,3 +22,6 @@ python3 nn_model.py # to see neural network model
 
 ## Presentation
 open presentation.pdf
+
+
+![picture](https://github.com/kubapok/pm-task/blob/master/presentation/time-period.png)
