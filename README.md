@@ -20,7 +20,9 @@ Tested on tenserflow backend.
 
 ## Running
 python3 analyze.py # to see summaries and lots of plots on dataset
+
 python3 simple_models.py # to see linear model (with summaries) and stochastic gradient descent model
+
 python3 nn_model.py # to see neural network model
 
 ## Presentation
