@@ -2,7 +2,6 @@ import datetime
 import copy
 import pandas as pd
 import seaborn as sns
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import sklearn.preprocessing
@@ -54,9 +53,11 @@ def get_means_in_months(report, year):
                              for x in range(1, 13)])
     return month_means
 
+
 def plot_years(report,):
     sns.boxplot(x="year", y="pm2.5", data=report)
     plt.show()
+
 
 def plot_months(report,):
     pal = sns.color_palette()[:5]
@@ -123,6 +124,7 @@ if __name__ == "__main__":
     input('correlation for pm2.5 (type enter to continue)')
     print(report.corr()['pm2.5'])
 
+    # just looking to see time on pm2.5 impact
     plot_days(report, datetime.datetime(2010, 3, 1),
               datetime.datetime(2010, 3, 10))
     plot_days(report, datetime.datetime(2012, 1, 1),
