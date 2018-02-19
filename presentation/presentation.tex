@@ -39,7 +39,7 @@
 	Po analizie zbioru jako szeregu czasowego nasuwają się następujące wnioski:
 	\begin{itemize}
 		\item Brak wyraźnej okresowości wysokości stężenia w zależności od godziny,
-		\item średnia okresowość wysokości stężenia w zależności od miesiąca. Najwyższe stężenia zaobserwować można w okresie październik-luty.
+		\item występuje pewna okresowość wysokości stężenia w zależności od miesiąca. Najwyższe stężenia zaobserwować można w okresie październik-luty.
 			Prawdopodobnie jest to wynikiem sezonu grzewczego.
 			Podejrzanie niska wartość na wykresie dla stycznia 2011 wynika z braku danych w tym miesiącu (90\% braków).
 		\item nie ma trendu zmiany średniego stężenia na przestrzeni lat.
@@ -85,9 +85,9 @@
 	W celu przewidzenia stężenia PM2.5 stworzono model regresji liniowej oraz model neuronowy. Dla obu modeli najlepszy okazał się zestaw cech:
 	miesiąc, godzina, punkt rosy, temperatura, ciśnienie, prędkość wiatru, czas opadu śniegu, czasu opadu deszczu, kierunek wiatru (zakodowawany jako wektor binarny).
 	\begin{itemize}
-		\item Naiwny model (zawsze średnia) daje MSE równe 8257
-		\item Model regresji liniowej daje MSE równe 6051
-		\item Model neuronowy (5 warstw ukrytych) daje MSE 4791 z odchyleniem standardowym 267 (walidacja krzyżowa z podziałem 0.1)
+		\item Naiwny model (zawsze średnia) daje MSE równe 8257.
+		\item Model regresji liniowej daje MSE równe 6051.
+		\item Model neuronowy (5 warstw ukrytych) daje MSE 4791 z odchyleniem standardowym 267 (walidacja krzyżowa z podziałem 0.1).
 	\end{itemize}
 	Ze względu na wielkość zbioru, model neuronowy daje zdecydowanie lepszy wynik niż prosta regresja liniowa,
 	zatem w tym przypadku jest rekomendowany.
