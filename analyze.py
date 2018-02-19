@@ -107,22 +107,41 @@ def plot_lms(report):
 def plot_wind_impact(report):
     sns.boxplot(x="cbwd", y="pm2.5", data=report)
     plt.show()
+    sns.boxplot(x="cbwd", y='Iws', data=report)
+    plt.show()
+
+
+def plot_hours(report):
+    sns.boxplot(x="hour", y='pm2.5', data=report)
+    plt.show()
+
+
+def plot_Iws(report):
+    sns.jointplot(x='Iws', y="pm2.5", data=report, kind="hex")
+    plt.show()
 
 
 if __name__ == "__main__":
     sns.set(color_codes=True)
     report = get_report()
 
+    print('-' * 100)
     input('nan values (type enter to continue)')
     print(report.isnull().sum())
+    print('-' * 100)
     input('report info (type enter to continue)')
     print(report.info())
+    print('-' * 100)
     input('describe (type enter to continue)')
     print(report.describe())
+    print('-' * 100)
     input('correlation (type enter to continue)')
     print(report.corr())
+    print('-' * 100)
     input('correlation for pm2.5 (type enter to continue)')
     print(report.corr()['pm2.5'])
+
+    plot_hours(report)
 
     # just looking to see time on pm2.5 impact
     plot_days(report, datetime.datetime(2010, 3, 1),
@@ -138,6 +157,10 @@ if __name__ == "__main__":
 
     plot_years(report)
     plot_months(report)
+
+    # strange Jan 2011, let's take a closer look
+    report1 = report[(report['month'] == 1) & (report['year'] == 2011)]
+    sum(report1['pm2.5'].isna()) / len(report1['pm2.5'].isna())
 
     plot_lms(report)
     plot_wind_impact(report)

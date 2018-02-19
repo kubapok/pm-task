@@ -22,7 +22,7 @@ X_train_scaled = pd.DataFrame(
 y_train = y_train.values[:, 0]
 
 
-def baseline_model():
+def nn_model():
     model = Sequential()
     model.add(Dense(20, input_dim=X_train.shape[1],
                     kernel_initializer='normal', activation='relu'))
@@ -41,10 +41,18 @@ def baseline_model():
     return model
 
 
-estimator = KerasRegressor(build_fn=baseline_model,
-                           nb_epoch=10, batch_size=4, verbose=1)
-estimator.fit(X_train_scaled, y_train)
+estimator = KerasRegressor(build_fn=nn_model,
+                           nb_epoch=10, batch_size=1, verbose=1)
 
+
+
+# slow, but more accurate
+# from sklearn.model_selection import cross_val_score
+# results = cross_val_score(estimator, X, y, cv=10)
+# print(results.mean(), results.std())
+# import sys; sys.exit(0)
+
+estimator.fit(X_train_scaled, y_train)
 X_test_scaled = pd.DataFrame(
     scaler.transform(X_test)).values[:, 0:X_train.shape[1]]
 y_test = y_test.values[:, 0]

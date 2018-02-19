@@ -19,18 +19,21 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(
         data, target, test_size=0.1, random_state=0)
 
+    print('-'*100)
     # naive model (always mean)
     m = float(y_train.mean())
     print('maive MSE: ', mean_squared_error(
         [m for _ in range(len(y_test))], y_test))
     print()
 
+    print('-'*100)
     # linear model
     lm = sm.OLS(y_train, X_train).fit()
-    lm.summary()
+    print(lm.summary())
     print('lm MSE: ', mean_squared_error(lm.predict(X_test), y_test))
     print('lm AIC: ', lm.aic)
 
+    print('-'*100)
     # AIC
     print("AIC")
     aic = LassoLarsIC(criterion='aic')
@@ -40,6 +43,7 @@ if __name__ == "__main__":
     print(mean_squared_error(y_test, predictions))
     print(aic.coef_)
 
+    print('-'*100)
     # SGD
     scaler = StandardScaler()
     scaler.fit(X_train)
@@ -47,4 +51,4 @@ if __name__ == "__main__":
     sgd = SGDRegressor(penalty='l2', alpha=0.15, n_iter=200)
     sgd = sgd.fit(X_train_scaled, y_train)
     predictions = sgd.predict(scaler.transform(X_test))
-    print(mean_squared_error(y_test, predictions))
+    print('sgd: ', mean_squared_error(y_test, predictions))
